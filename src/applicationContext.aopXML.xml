@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<bean id="chinese" class="com.zc.cris.beans.spring.aop.impl.xml.Chinese"></bean>
+
+	<bean id="validationAspect" class="com.zc.cris.beans.spring.aop.impl.xml.ValidationAspect"></bean>
+	
+	<bean id="logginAspect" class="com.zc.cris.beans.spring.aop.impl.xml.LogginAspect"></bean>
+	
+	<!-- 配置aop -->
+	<aop:config>
+		<!-- 定义切入点表达式 -->
+		<aop:pointcut expression="execution(* com.zc.cris.beans.spring.aop.impl.xml.*.*(String))" id="pointCut"/>
+		<!-- 定义一个切面对象 -->
+		<aop:aspect ref="logginAspect" order="2">
+			<!-- 定义各种通知 -->
+			<aop:before method="beforeMethod" pointcut-ref="pointCut"/>
+			<aop:after method="afterMethod" pointcut-ref="pointCut"/>
+			<aop:after-returning method="afterRetruning" returning="result" pointcut-ref="pointCut"/>
+			<aop:after-throwing method="afterThrowing" throwing="e" pointcut-ref="pointCut"/>
+			<!-- <aop:around method="around"/> -->
+		</aop:aspect>
+		<aop:aspect ref="validationAspect" order="1">
+			<aop:before method="validate" pointcut-ref="pointCut"/>
+		</aop:aspect>		
+	</aop:config>
+
+</beans>

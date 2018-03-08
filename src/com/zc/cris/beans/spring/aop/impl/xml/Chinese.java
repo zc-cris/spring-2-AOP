@@ -1,10 +1,9 @@
-package com.zc.cris.beans.spring.aop.impl;
+package com.zc.cris.beans.spring.aop.impl.xml;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 
 import org.springframework.stereotype.Component;
 
-@Component(value="chinese")
 public class Chinese implements People{
 
 	private String name;

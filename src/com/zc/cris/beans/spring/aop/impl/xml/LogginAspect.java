@@ -1,4 +1,4 @@
-package com.zc.cris.beans.spring.aop.impl;
+package com.zc.cris.beans.spring.aop.impl.xml;
 
 import java.util.Arrays;
 import java.util.concurrent.SynchronousQueue;
@@ -15,59 +15,32 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Order(2)
-//把该类声明为一个切面：需要把该类放入到ioc容器中，然后再声明为一个切面
-@Aspect
-@Component
 public class LogginAspect {
 
 	
-	/*
-	 * 定义一个方法，专门用来声明切入点表达式，一般的，该方法中不需要再写任何代码
-	 * 使用@Pointcut 注解来声明
-	 * 后面的其他通知直接使用该方法名来引用当前的切入点表达式即可
-	 */
-	@Pointcut("execution(* com.zc.cris.beans.spring.aop.impl.*.*(String))")
 	public void declaredJointPointExpresson() {};
 	
-	
-	// 声明该方法是一个前置通知，在目标方法开始之前执行
-	@Before("declaredJointPointExpresson()")
 	public void beforeMethod(JoinPoint joinPoint) {
 		// 获取方法签名和参数集合
 		System.out.println(joinPoint.getSignature().getName() + "-----" + Arrays.asList(joinPoint.getArgs()));
 		System.out.println("我是方法的前置通知");
 	}
 
-	// 声明该方法是一个后置通知，在目标方法执行后执行（无论目标方法是否发生异常）
-	// 且后置通知无法访问目标方法的返回值
-	@After("declaredJointPointExpresson()")
 	public void afterMethod(JoinPoint joinPoint) {
 
 		System.out.println("我是方法的后置通知");
 	}
 
-	// 声明该方法为返回通知：方法正常执行结束后执行的代码
-	// 返回 通知是可以访问到方法的返回值的！
-	@AfterReturning(value = "declaredJointPointExpresson()", returning = "result")
 	public void afterRetruning(JoinPoint joinPoint, Object result) {
 
 		System.out.println("我是方法的返回通知" + joinPoint.getSignature().getName() + "^^^^"
 				+ Arrays.asList(joinPoint.getArgs() + "我是方法的返回值" + result));
 	}
 	
-	//目标方法出现异常才会指定的代码
-	//可以访问到异常对象，且可以指定出现特定的异常（NullPointException）才会执行
-	@AfterThrowing(value = "declaredJointPointExpresson()",
-			throwing="e")
 	public void afterThrowing(JoinPoint joinPoint, Exception e) {
 		System.out.println("我是目标方法发生异常才执行的通知："+e.getMessage());
 	}
 	
-	//环绕通知：必须携带 ProceedingJoinPoint 类型的参数
-	//环绕通知类似于动态代理的全过程：ProceedingJoinPoint 类型的参数可以决定目标方法的执行，
-	//环绕通知必须要有返回值，返回值其实就是目标方法的返回值
-	@Around(value = "declaredJointPointExpresson()")
 	public Object around(ProceedingJoinPoint pjt) {
 		
 		Object result = null;
